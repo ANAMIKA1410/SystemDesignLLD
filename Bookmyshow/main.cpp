@@ -170,32 +170,86 @@ public:
 // 🟢 Main Function to Test the System
 int main() {
     MovieBookingSystem system;
-
-    // Adding Users
-    User* user1 = system.addUser(1, "Anamika", "9876543210");
-
-    // Adding Movies
-    Movie* movie1 = system.addMovie(1, "Inception", 150, "English", 8.8);
-
-    // Adding Theaters
-    Theater* theater1 = system.addTheater(1, "PVR Indore", "Indore");
-
-    // Adding Screens
-    Screen* screen1 = new Screen(1);
-    theater1->addScreen(screen1);
-
-    // Adding a Show
-    Show* show1 = new Show(1, movie1, "6:00 PM", 5, 5);
-    screen1->addShow(show1);
-
-    // Booking a Ticket
-    Booking* booking1 = system.bookTicket(user1, show1, 2, 3);
-
-    // Printing Booking Details
-    if (booking1) {
-        cout << "\n✅ Booking Successful!" << endl;
-        booking1->printBookingDetails();
+    unordered_map<int, User*> userMap;
+    unordered_map<int, Movie*> movieMap;
+    unordered_map<int, Theater*> theaterMap;
+    unordered_map<int, Show*> showMap;
+    
+    int choice;
+    while (true) {
+        cout << "\n===== Movie Booking System =====" << endl;
+        cout << "1. Add User" << endl;
+        cout << "2. Add Movie" << endl;
+        cout << "3. Add Theater & Screen" << endl;
+        cout << "4. Add Show" << endl;
+        cout << "5. Book Ticket" << endl;
+        cout << "6. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        
+        if (choice == 1) {
+            int id;
+            string name, contact;
+            cout << "Enter User ID, Name, and Contact: ";
+            cin >> id >> name >> contact;
+            userMap[id] = system.addUser(id, name, contact);
+            cout << "User added successfully!" << endl;
+        } 
+        else if (choice == 2) {
+            int id, duration;
+            string title, language;
+            float rating;
+            cout << "Enter Movie ID, Title, Duration, Language, Rating: ";
+            cin >> id >> title >> duration >> language >> rating;
+            movieMap[id] = system.addMovie(id, title, duration, language, rating);
+            cout << "Movie added successfully!" << endl;
+        } 
+        else if (choice == 3) {
+            int id;
+            string name, city;
+            cout << "Enter Theater ID, Name, City: ";
+            cin >> id >> name >> city;
+            theaterMap[id] = system.addTheater(id, name, city);
+            cout << "Theater added successfully!" << endl;
+        } 
+        else if (choice == 4) {
+            int showId, movieId, theaterId, screenId, rows, cols;
+            string time;
+            cout << "Enter Show ID, Movie ID, Theater ID, Screen ID, Start Time, Rows, Cols: ";
+            cin >> showId >> movieId >> theaterId >> screenId >> time >> rows >> cols;
+            if (movieMap.find(movieId) == movieMap.end() || theaterMap.find(theaterId) == theaterMap.end()) {
+                cout << "Invalid Movie or Theater ID!" << endl;
+                continue;
+            }
+            Show* show = new Show(showId, movieMap[movieId], time, rows, cols);
+            showMap[showId] = show;
+            theaterMap[theaterId]->screens.push_back(new Screen(screenId));
+            theaterMap[theaterId]->screens.back()->addShow(show);
+            cout << "Show added successfully!" << endl;
+        } 
+        else if (choice == 5) {
+            int userId, showId, row, col;
+            cout << "Enter User ID, Show ID, Row, Column: ";
+            cin >> userId >> showId >> row >> col;
+            if (userMap.find(userId) == userMap.end() || showMap.find(showId) == showMap.end()) {
+                cout << "Invalid User or Show ID!" << endl;
+                continue;
+            }
+            Booking* booking = system.bookTicket(userMap[userId], showMap[showId], row, col);
+            if (booking) {
+                cout << "\n✅ Booking Successful!" << endl;
+                booking->printBookingDetails();
+            }
+        } 
+        else if (choice == 6) {
+            cout << "Exiting system. Goodbye!" << endl;
+            break;
+        } 
+        else {
+            cout << "Invalid choice! Try again." << endl;
+        }
     }
-
     return 0;
 }
+
+
