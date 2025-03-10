@@ -21,6 +21,7 @@ Stores seat number, row, and booking status.
 Handles ticket reservations and ensures seat availability before booking.
 
 
+# STEPS
 
 🔹 Step 1: User searches for movies in a city
 Store movies and theaters in a data structure (vector/unordered_map).
@@ -36,3 +37,11 @@ Before confirming a booking, check if the seat is available.
 🔹 Step 4: Booking a seat
 If the seat is available, mark it as booked.
 Store the booking details.
+
+
+### OUTPUT
+✅ Booking Successful! <br/>
+Booking ID: 1<br/>
+User: Anamika (9876543210)<br/>
+Movie: Inception | Time: 6:00 PM<br/>
+Seat: Row 2, Number 3
